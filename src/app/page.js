@@ -1,4 +1,4 @@
-import Navbar from "@/component/Navbar";
+import Navbar from "@/app/component/Navbar";
 import Image from "next/image";
 
 export default function Home() {

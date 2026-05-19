@@ -15,7 +15,8 @@ const Navbar = () => {
     ];
 
     return (
-        <nav className="bg-[#0f141a]/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
+        <nav className="relative bg-[#0f141a]/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
+
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
 
@@ -24,14 +25,12 @@ const Navbar = () => {
 
                     <div className="flex items-center gap-3">
 
-
                         <button
                             onClick={() => setIsOpen(!isOpen)}
                             className="md:hidden p-2 rounded-lg text-slate-300 hover:bg-slate-800 transition"
                         >
                             {isOpen ? "✕" : "☰"}
                         </button>
-
 
                         <Link
                             href="/"
@@ -70,39 +69,47 @@ const Navbar = () => {
                             Sign Up
                         </Link>
                     </div>
+
                 </div>
-
-                {isOpen && (
-                    <div className="md:hidden bg-[#0f141a] border-t border-slate-800 mt-2 p-4 rounded-xl animate-fadeIn">
-                        <div className="flex flex-col space-y-4">
-                            {navLinks.map((link) => (
-                                <NavLink
-                                    key={link.name}
-                                    href={link.href}
-                                    className="text-base font-medium"
-                                >
-                                    {link.name}
-                                </NavLink>
-                            ))}
-
-
-                            <Link
-                                href="/login"
-                                className="px-4 py-2 rounded-lg text-center text-white border border-slate-700 hover:border-cyan-400 hover:text-cyan-400 transition"
-                            >
-                                Login
-                            </Link>
-
-                            <Link
-                                href="/register"
-                                className="px-4 py-2 rounded-lg bg-cyan-500 text-black text-center font-semibold hover:bg-cyan-600 transition"
-                            >
-                                Sign Up
-                            </Link>
-                        </div>
-                    </div>
-                )}
             </div>
+
+
+            {isOpen && (
+                <div className="md:hidden absolute left-0 top-20 w-full bg-[#0f141a] border-t border-slate-800 p-4 shadow-lg z-50">
+
+                    <div className="flex flex-col space-y-4">
+
+                        {navLinks.map((link) => (
+                            <NavLink
+                                key={link.name}
+                                href={link.href}
+                                onClick={() => setIsOpen(false)}
+                                className="text-base font-medium text-slate-300 hover:text-white"
+                            >
+                                {link.name}
+                            </NavLink>
+                        ))}
+
+                        <Link
+                            href="/login"
+                            onClick={() => setIsOpen(false)}
+                            className="px-4 py-2 rounded-lg text-center text-white border border-slate-700 hover:border-cyan-400 hover:text-cyan-400 transition"
+                        >
+                            Login
+                        </Link>
+
+                        <Link
+                            href="/register"
+                            onClick={() => setIsOpen(false)}
+                            className="px-4 py-2 rounded-lg bg-cyan-500 text-black text-center font-semibold hover:bg-cyan-600 transition"
+                        >
+                            Sign Up
+                        </Link>
+
+                    </div>
+                </div>
+            )}
+
         </nav>
     );
 };
