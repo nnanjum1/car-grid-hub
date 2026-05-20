@@ -1,6 +1,7 @@
 import React from "react";
 import { toast } from "react-toastify";
 import CarClient from "./CarClient";
+import Link from "next/link";
 
 const CarDetailsPage = async ({ params }) => {
     const { id } = await params;
@@ -10,9 +11,7 @@ const CarDetailsPage = async ({ params }) => {
         { cache: "no-store" }
     );
 
-    if (!res.ok) {
-        toast.error("Failed to fetch car details");
-    }
+
 
     const car = await res.json();
 
@@ -21,10 +20,14 @@ const CarDetailsPage = async ({ params }) => {
 
     return (
         <div className="min-h-screen bg-[#090d11] text-white px-4 py-10">
-            <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10">
+
+
+
+            <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 ">
 
 
                 <div className="rounded-2xl overflow-hidden bg-slate-900">
+
                     <img
                         src={car.imageUrl}
                         alt={car.name}
@@ -34,6 +37,11 @@ const CarDetailsPage = async ({ params }) => {
 
 
                 <div>
+                    <Link href={`/edit/${car._id}`}>
+                        <button className=" bg-slate-800 hover:bg-slate-700 text-white text-sm px-4 py-2 rounded-lg transition">
+                            Edit Details
+                        </button>
+                    </Link>
                     <h1 className="text-3xl font-bold">{car.name}</h1>
 
                     <p className="text-slate-400 mt-2">
@@ -50,7 +58,7 @@ const CarDetailsPage = async ({ params }) => {
                         <p> Bookings: {car.booking_count}</p>
                     </div>
 
-                    <div className="mt-6 text-2xl font-bold text-cyan-400">
+                    <div className="my-6  text-2xl font-bold text-cyan-400">
                         ${car.rentPrice}{" "}
                         <span className="text-sm text-slate-400">/day</span>
                     </div>
@@ -59,7 +67,7 @@ const CarDetailsPage = async ({ params }) => {
                 </div>
             </div>
 
-        </div>
+        </div >
 
 
     );

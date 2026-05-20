@@ -47,14 +47,19 @@ export default function CarClient({ car }) {
     return (
         <div>
 
+
+
             <button
-                onClick={() => setOpen(true)}
-                className="mt-6 w-full bg-cyan-500 hover:bg-cyan-600 text-black font-bold py-3 rounded-xl transition"
+                disabled={car.availability === "Unavailable"}
+                className={` setOpen(true)}
+                className=" w-full font-bold py-3 rounded-xl transition ${car.availability === "Unavailable"
+                        ? "bg-gray-600 cursor-not-allowed opacity-50"
+                        : "bg-cyan-500 hover:bg-cyan-600 text-black"
+                    }`}
+                onClick={handleBooking}
             >
-                Book Now
+                {car.availability === "Unavailable" ? "Not Available" : "Book Now"}
             </button>
-
-
             {open && (
                 <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
                     <div className="bg-[#0f141a] w-[90%] max-w-md p-6 rounded-xl border border-slate-700">
