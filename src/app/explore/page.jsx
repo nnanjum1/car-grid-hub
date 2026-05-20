@@ -7,6 +7,8 @@ const ExploreCarPage = async () => {
         { cache: "no-store" }
     );
     console.log(process.env.NEXT_PUBLIC_API_URL);
+
+
     const cars = await res.json()
     console.log(cars)
 
@@ -52,11 +54,18 @@ const ExploreCarPage = async () => {
 
                                 <h2 className="mt-4 text-lg font-bold text-white">{car.name}</h2>
                                 <div className='flex justify-between'> <p className="text-slate-400 text-sm">{car.type}</p>
-                                    <p className="mt-4 text-lg font-bold border border-white px-2 rounded inline text-white">{car.availability}</p>
-                                </div>
+                                    <p
+                                        className={`mt-4 text-lg font-bold border px-2 rounded inline ${car.availability === "Unavailable"
+                                            ? "text-slate-400 border-slate-500"
+                                            : "text-white border-white"
+                                            }`}
+                                    >
+                                        {car.availability}
+                                    </p>                                </div>
 
                                 <div className="flex items-center justify-between mt-4">
-                                    <p className="text-cyan-400 font-semibold">${car.rentPrice}/day</p>
+                                    <p className="text-cyan-400 font-semibold">${car.rentPrice}{" "}
+                                        <span className="text-sm text-slate-400">/day</span></p>
                                     <Link href={`/explore/${car._id}`}>
                                         <button className="px-3 py-1 rounded-lg bg-cyan-500 text-black font-semibold text-sm hover:bg-cyan-400">
                                             View Details

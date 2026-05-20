@@ -1,4 +1,6 @@
 import React from "react";
+import { toast } from "react-toastify";
+import CarClient from "./CarClient";
 
 const CarDetailsPage = async ({ params }) => {
     const { id } = await params;
@@ -7,6 +9,10 @@ const CarDetailsPage = async ({ params }) => {
         `${process.env.NEXT_PUBLIC_API_URL}/cars/${id}`,
         { cache: "no-store" }
     );
+
+    if (!res.ok) {
+        toast.error("Failed to fetch car details");
+    }
 
     const car = await res.json();
 
@@ -41,7 +47,7 @@ const CarDetailsPage = async ({ params }) => {
                     <div className="mt-6 space-y-2 text-sm text-slate-400">
                         <p>Pickup Location: {car.location}</p>
                         <p> Availability: {car.availability}</p>
-                        <p> Bookings: {car.booking_count || 0}</p>
+                        <p> Bookings: {car.booking_count}</p>
                     </div>
 
                     <div className="mt-6 text-2xl font-bold text-cyan-400">
@@ -49,12 +55,13 @@ const CarDetailsPage = async ({ params }) => {
                         <span className="text-sm text-slate-400">/day</span>
                     </div>
 
-                    <button className="mt-6 w-full bg-cyan-500 hover:bg-cyan-600 text-black font-bold py-3 rounded-xl transition">
-                        Book Now
-                    </button>
+                    <CarClient car={car} />
                 </div>
             </div>
+
         </div>
+
+
     );
 };
 
