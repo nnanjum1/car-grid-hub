@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react'
 
 const ExploreCarPage = async () => {
@@ -55,10 +56,12 @@ const ExploreCarPage = async () => {
                                 </div>
 
                                 <div className="flex items-center justify-between mt-4">
-                                    <p className="text-cyan-400 font-semibold">${car.rentPrice}</p>
-                                    <button className="px-3 py-1 rounded-lg bg-cyan-500 text-black font-semibold text-sm hover:bg-cyan-400">
-                                        View Details
-                                    </button>
+                                    <p className="text-cyan-400 font-semibold">${car.rentPrice}/day</p>
+                                    <Link href={`/explore/${car._id}`}>
+                                        <button className="px-3 py-1 rounded-lg bg-cyan-500 text-black font-semibold text-sm hover:bg-cyan-400">
+                                            View Details
+                                        </button>
+                                    </Link>
                                 </div>
                             </div>
                         ))}
