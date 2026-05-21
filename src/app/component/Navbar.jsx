@@ -15,7 +15,7 @@ const Navbar = () => {
     ];
 
     return (
-        <nav className="relative bg-[#0f141a]/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
+        <nav className=" bg-[#0f141a]/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -63,7 +63,7 @@ const Navbar = () => {
                         </Link>
 
                         <Link
-                            href="/register"
+                            href="/signup"
                             className="px-5 py-2 rounded-xl bg-cyan-500 text-black text-sm font-semibold hover:bg-cyan-600 transition"
                         >
                             Sign Up
@@ -99,7 +99,7 @@ const Navbar = () => {
                         </Link>
 
                         <Link
-                            href="/register"
+                            href="/signup"
                             onClick={() => setIsOpen(false)}
                             className="px-4 py-2 rounded-lg bg-cyan-500 text-black text-center font-semibold hover:bg-cyan-600 transition"
                         >
