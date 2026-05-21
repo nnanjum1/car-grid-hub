@@ -1,22 +1,73 @@
-import React from "react";
+"use client";
+
+import { useState, useEffect, use } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { toast } from "react-toastify";
 import CarClient from "./CarClient";
-import Link from "next/link";
+import DeleteModal from "@/app/component/DeleteModal";
 
-const CarDetailsPage = async ({ params }) => {
-    const { id } = await params;
+export default function CarDetailsPage({ params }) {
+    const { id } = use(params);
+    const router = useRouter();
 
-    const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/cars/${id}`,
-        { cache: "no-store" }
-    );
+    const [car, setCar] = useState(null);
+    const [showDelete, setShowDelete] = useState(false);
+    const [loading, setLoading] = useState(false);
 
+    useEffect(() => {
+        const fetchCar = async () => {
+            try {
+                const res = await fetch(
+                    `${process.env.NEXT_PUBLIC_API_URL}/cars/${id}`
+                );
 
+                if (!res.ok) {
+                    throw new Error("Failed to fetch car");
+                }
 
-    const car = await res.json();
+                const data = await res.json();
 
-    console.log(id);
-    console.log(car);
+                if (!data || data.success === false) {
+                    throw new Error("Invalid car data");
+                }
+
+                setCar(data);
+            } catch (err) {
+                console.error(err);
+                toast.error("Failed to load car details");
+            }
+        };
+
+        fetchCar();
+    }, [id]);
+
+    const handleDelete = async () => {
+        try {
+            setLoading(true);
+
+            const res = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/cars/${id}`,
+                {
+                    method: "DELETE",
+                }
+            );
+
+            if (!res.ok) throw new Error();
+
+            toast.success("Car deleted successfully");
+
+            setShowDelete(false);
+
+            router.push("/explore");
+        } catch (err) {
+            toast.error("Delete failed");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (!car) return <div className="text-white p-10">Loading...</div>;
 
     return (
         <div className="min-h-screen bg-[#090d11] text-white px-4 py-10">
@@ -31,17 +82,31 @@ const CarDetailsPage = async ({ params }) => {
                     <img
                         src={car.imageUrl}
                         alt={car.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-fit"
                     />
                 </div>
 
 
                 <div>
-                    <Link href={`/edit/${car._id}`}>
-                        <button className=" bg-slate-800 hover:bg-slate-700 text-white text-sm px-4 py-2 rounded-lg transition">
-                            Edit Details
+
+
+                    <div className="flex gap-3 mb-6">
+
+                        <Link href={`/edit/${car._id}`}>
+                            <button className="bg-slate-800 px-4 py-2 rounded-lg">
+                                Edit
+                            </button>
+                        </Link>
+
+                        <button
+                            onClick={() => setShowDelete(true)}
+                            className="bg-red-600 px-4 py-2 rounded-lg"
+                        >
+                            Delete
                         </button>
-                    </Link>
+
+                    </div>
+
                     <h1 className="text-3xl font-bold">{car.name}</h1>
 
                     <p className="text-slate-400 mt-2">
@@ -63,14 +128,18 @@ const CarDetailsPage = async ({ params }) => {
                         <span className="text-sm text-slate-400">/day</span>
                     </div>
 
+
                     <CarClient car={car} />
                 </div>
             </div>
 
-        </div >
 
-
+            <DeleteModal
+                show={showDelete}
+                onClose={() => setShowDelete(false)}
+                onConfirm={handleDelete}
+                loading={loading}
+            />
+        </div>
     );
-};
-
-export default CarDetailsPage;
+}
