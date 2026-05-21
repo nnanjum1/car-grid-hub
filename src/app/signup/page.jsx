@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { authClient } from "@/lib/auth-client";
 
 export default function SignUpPage() {
     const router = useRouter();
@@ -20,8 +21,6 @@ export default function SignUpPage() {
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
-
-
         setErrors({ ...errors, [e.target.name]: "" });
     };
 
@@ -31,7 +30,7 @@ export default function SignUpPage() {
         const minLength = password.length >= 6;
 
         if (!minLength || !hasUpperCase || !hasLowerCase) {
-            return "Password must be at least 6 characters long and include at least one uppercase and one lowercase letter.";
+            return "Password must be at least 6 characters, include uppercase and lowercase letter.";
         }
 
         return null;
@@ -42,7 +41,6 @@ export default function SignUpPage() {
 
         let newErrors = {};
 
-
         if (!form.name) newErrors.name = "Name is required";
         if (!form.email) newErrors.email = "Email is required";
         if (!form.photo) newErrors.photo = "Photo URL is required";
@@ -52,24 +50,28 @@ export default function SignUpPage() {
 
         setErrors(newErrors);
 
+        if (Object.keys(newErrors).length > 0) return;
 
-        try {
-            const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/users`,
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(form),
-                }
-            );
+        const { error } = await authClient.signUp.email({
+            email: form.email,
+            password: form.password,
+            name: form.name,
+            image: form.photo,
+        });
 
-            if (!res.ok) throw new Error();
+        if (error) {
+            const msg = (error.message || "").toLowerCase();
 
-            toast.success("Registration successful!");
-            router.push("/login");
-        } catch (err) {
-            toast.error("Registration failed");
+            if (msg.includes("exists") || msg.includes("already")) {
+                toast.error("This email is already registered");
+            } else {
+                toast.error(error.message || "Registration failed");
+            }
+            return;
         }
+
+        toast.success("Registration successful!");
+        router.push("/login");
     };
 
     return (
@@ -93,9 +95,7 @@ export default function SignUpPage() {
                             className="w-full p-3 bg-slate-900 rounded-lg"
                         />
                         {errors.name && (
-                            <p className="text-red-400 text-sm mt-1">
-                                {errors.name}
-                            </p>
+                            <p className="text-red-400 text-sm mt-1">{errors.name}</p>
                         )}
                     </div>
 
@@ -109,9 +109,7 @@ export default function SignUpPage() {
                             className="w-full p-3 bg-slate-900 rounded-lg"
                         />
                         {errors.email && (
-                            <p className="text-red-400 text-sm mt-1">
-                                {errors.email}
-                            </p>
+                            <p className="text-red-400 text-sm mt-1">{errors.email}</p>
                         )}
                     </div>
 
@@ -125,9 +123,7 @@ export default function SignUpPage() {
                             className="w-full p-3 bg-slate-900 rounded-lg"
                         />
                         {errors.photo && (
-                            <p className="text-red-400 text-sm mt-1">
-                                {errors.photo}
-                            </p>
+                            <p className="text-red-400 text-sm mt-1">{errors.photo}</p>
                         )}
                     </div>
 
@@ -142,7 +138,6 @@ export default function SignUpPage() {
                             className="w-full p-3 bg-slate-900 rounded-lg pr-10"
                         />
 
-                        {/* Eye Icon */}
                         <span
                             onClick={() => setShowPassword(!showPassword)}
                             className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400"
@@ -151,9 +146,7 @@ export default function SignUpPage() {
                         </span>
 
                         {errors.password && (
-                            <p className="text-red-400 text-sm mt-1">
-                                {errors.password}
-                            </p>
+                            <p className="text-red-400 text-sm mt-1">{errors.password}</p>
                         )}
                     </div>
 
@@ -176,7 +169,19 @@ export default function SignUpPage() {
                 >
                     Continue with Google
                 </button>
+
+                <p className="text-sm text-center mt-4 text-slate-400">
+                    Already have an account?{" "}
+                    <span
+                        onClick={() => router.push("/login")}
+                        className="text-cyan-400 cursor-pointer hover:underline"
+                    >
+                        Login
+                    </span>
+                </p>
             </div>
+
+
         </div>
     );
 }
