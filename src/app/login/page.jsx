@@ -53,7 +53,7 @@ export default function LoginPage() {
             }
 
             toast.success("Login successful!");
-            router.push("/"); // redirect to home
+            router.push("/");
         } catch (err) {
             toast.error("Something went wrong");
         } finally {
