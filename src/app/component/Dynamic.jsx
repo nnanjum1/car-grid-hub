@@ -17,12 +17,12 @@ const Dynamic = async () => {
         <section className="py-16 bg-[#090d11] px-4">
             <div className="max-w-7xl mx-auto">
 
-                {/* Section Title */}
+
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-8 text-center">
                     Available Cars
                 </h2>
 
-                {/* No Cars */}
+
                 {cars.length === 0 ? (
                     <div className="text-center py-20 bg-[#0f141a] border border-dashed border-slate-800 rounded-2xl">
                         <p className="text-slate-400 text-lg">No vehicles found in the catalog.</p>
