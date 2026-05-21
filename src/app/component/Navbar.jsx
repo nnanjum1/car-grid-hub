@@ -79,7 +79,7 @@ const Navbar = () => {
                                 </Link>
 
                                 <Link
-                                    href="/register"
+                                    href="/signup"
                                     className="px-5 py-2 rounded-xl bg-cyan-500 text-black text-sm font-semibold hover:bg-cyan-600 transition"
                                 >
                                     Sign Up
@@ -171,7 +171,7 @@ const Navbar = () => {
                                     </Link>
 
                                     <Link
-                                        href="/register"
+                                        href="/signup"
                                         onClick={() => setIsOpen(false)}
                                         className="px-4 py-2 rounded-lg bg-cyan-500 text-black text-center font-semibold"
                                     >

@@ -61,22 +61,10 @@ export default function LoginPage() {
         }
     };
 
-    const handleGoogleLogin = async () => {
-        try {
-            const { error } = await authClient.signIn.social({
-                provider: "google",
-            });
-
-            if (error) {
-                toast.error("Google login failed");
-                return;
-            }
-
-            toast.success("Login successful!");
-            router.push("/");
-        } catch (err) {
-            toast.error("Google login failed");
-        }
+    const googleSignIn = async () => {
+        const data = await authClient.signIn.social({
+            provider: "google",
+        });
     };
 
     return (
@@ -141,7 +129,7 @@ export default function LoginPage() {
 
 
                 <button
-                    onClick={handleGoogleLogin}
+                    onClick={googleSignIn}
                     className="w-full mt-4 bg-green-500 hover:bg-green-600 py-3 rounded-lg font-semibold"
                 >
                     Continue with Google

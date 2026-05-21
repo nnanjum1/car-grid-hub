@@ -74,6 +74,12 @@ export default function SignUpPage() {
         router.push("/login");
     };
 
+    const googleSignIn = async () => {
+        const data = await authClient.signIn.social({
+            provider: "google",
+        });
+    };
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-[#0b0f14] text-white">
 
@@ -162,10 +168,7 @@ export default function SignUpPage() {
 
                 <button
                     className="w-full mt-4 bg-green-500 py-3 rounded-lg font-semibold"
-                    onClick={() => {
-                        toast.success("Google login successful!");
-                        router.push("/");
-                    }}
+                    onClick={googleSignIn}
                 >
                     Continue with Google
                 </button>
