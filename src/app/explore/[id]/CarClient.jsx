@@ -1,5 +1,6 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -9,21 +10,41 @@ export default function CarClient({ car }) {
     const [note, setNote] = useState("");
     const [loading, setLoading] = useState(false);
 
+    const { data: session } = authClient.useSession();
+
     const handleBooking = async () => {
+        if (!session) {
+            toast.error("Please login to book a car");
+            return;
+        }
+
         try {
             setLoading(true);
 
+            const bookingData = {
+                carId: car._id,
+                carName: car.name,
+                carImage: car.imageUrl,
+                price: car.rentPrice,
+
+                userName: session.user.name,
+                userEmail: session.user.email,
+                userImage: session.user.image,
+
+                driverNeeded: driver,
+                specialNote: note,
+
+                bookedAt: new Date().toISOString(),
+            };
+
             const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/cars/book/${car._id}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/booking`,
                 {
-                    method: "PATCH",
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({
-                        driverNeeded: driver,
-                        specialNote: note,
-                    }),
+                    body: JSON.stringify(bookingData),
                 }
             );
 
@@ -51,15 +72,17 @@ export default function CarClient({ car }) {
 
             <button
                 disabled={car.availability === "Unavailable"}
-                className={` setOpen(true)}
-                className=" w-full font-bold py-3 rounded-xl transition ${car.availability === "Unavailable"
+                onClick={() => setOpen(true)}
+                className={`w-full font-bold py-3 rounded-xl transition ${car.availability === "Unavailable"
                         ? "bg-gray-600 cursor-not-allowed opacity-50"
                         : "bg-cyan-500 hover:bg-cyan-600 text-black"
                     }`}
-                onClick={handleBooking}
             >
-                {car.availability === "Unavailable" ? "Not Available" : "Book Now"}
+                {car.availability === "Unavailable"
+                    ? "Not Available"
+                    : "Book Now"}
             </button>
+
             {open && (
                 <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
                     <div className="bg-[#0f141a] w-[90%] max-w-md p-6 rounded-xl border border-slate-700">

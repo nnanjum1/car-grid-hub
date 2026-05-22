@@ -52,6 +52,7 @@ const Navbar = () => {
                         >
                             CarGrid<span className="text-cyan-400">Hub</span>
                         </Link>
+
                     </div>
 
 

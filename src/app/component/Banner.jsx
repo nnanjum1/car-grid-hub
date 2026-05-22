@@ -13,7 +13,7 @@ const Banner = () => {
                 </p>
 
                 <a
-                    href="/cars"
+                    href="/explore"
                     className="bg-cyan-400 hover:bg-cyan-700 text-white px-8 py-3 rounded-lg text-lg font-semibold transition duration-200"
                 >
                     Explore Cars
